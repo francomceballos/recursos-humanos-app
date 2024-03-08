@@ -3,6 +3,7 @@ import axios from 'axios';
 import { NumericFormat } from 'react-number-format';
 import { Link } from 'react-router-dom';
 
+
 export default function ListEmployees() {
 
     const urlBase = "http://localhost:8080/rrhh-app/employees";
@@ -12,12 +13,28 @@ export default function ListEmployees() {
     useEffect(()=>{
         loadEmployees();
     }, []);
+    
 
-const loadEmployees = async () => {
-    const result = await axios.get(urlBase);
-    setEmployees(result.data);
-    console.log(result.data);
-}
+    const loadEmployees = async () => {
+        const result = await axios.get(urlBase);
+        setEmployees(result.data);
+        console.log(result.data);
+    }
+    const deleteEmployee = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this employee?");
+        if (isConfirmed) {
+            // Proceed with the delete operation
+            try {
+                await axios.delete(`${urlBase}/${id}`);
+                // Optionally, refresh the list of employees or remove the deleted employee from the state
+                loadEmployees(); // Assuming loadEmployees is a function that fetches the updated list
+            } catch (error) {
+                console.error("There was an error deleting the employee:", error);
+                // Handle error (e.g., show an error message)
+            }
+        }
+    };
+    
 
   return (
     <div className='container'>
@@ -50,7 +67,7 @@ const loadEmployees = async () => {
                     <td className='text-center'>
                         <div>
                         <Link className='btn btn-primary btn-sm me-3' to={`/edit/${employee.idEmployee}`}>Edit</Link>
-                        
+                        <button onClick={()=> deleteEmployee(employee.idEmployee)} className='btn btn-danger btn-sm'> Delete</button>
                         </div>
                     </td>
                 </tr>
