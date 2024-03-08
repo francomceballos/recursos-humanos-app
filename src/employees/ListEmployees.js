@@ -70,7 +70,7 @@ export default function ListEmployees() {
                         <NumericFormat 
                         value={employee.salary}
                         displayType={'text'}
-                        thousandsSeparator=','
+                        thousandSeparator=','
                         prefix={'$ '}
                         decimalScale={3} 
                         fixedDecimalScale
