@@ -9,6 +9,8 @@ export default function ListEmployees() {
     const urlBase = "http://localhost:8080/rrhh-app/employees";
 
     const [employees, setEmployees] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [employeeIdToDelete, setEmployeeToDelete] = useState(null);
 
     useEffect(()=>{
         loadEmployees();
@@ -21,18 +23,22 @@ export default function ListEmployees() {
         console.log(result.data);
     }
     const deleteEmployee = async (id) => {
-        const isConfirmed = window.confirm("Are you sure you want to delete this employee?");
-        if (isConfirmed) {
-            // Proceed with the delete operation
-            try {
-                await axios.delete(`${urlBase}/${id}`);
-                // Optionally, refresh the list of employees or remove the deleted employee from the state
-                loadEmployees(); // Assuming loadEmployees is a function that fetches the updated list
-            } catch (error) {
-                console.error("There was an error deleting the employee:", error);
-                // Handle error (e.g., show an error message)
-            }
+        setEmployeeToDelete(id);
+        setShowModal(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`${urlBase}/${employeeIdToDelete}`);
+            loadEmployees();
+        }   catch (error) {
+            console.error("There was an error deleting the employee:", error);
         }
+        setShowModal(false);
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
     };
     
 
@@ -75,6 +81,27 @@ export default function ListEmployees() {
             }
         </tbody>
         </table>
+
+            {/* Modal for delete confirmation */}
+        {showModal && (
+            <div className="modal" tabIndex="-1" role="dialog" style={{ display: "block" }}>
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Confirm Delete</h5>
+                            <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            Are you sure you want to delete this employee?
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
+                            <button type="button" className="btn btn-danger" onClick={confirmDelete}>Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
-  )
+  );
 }
