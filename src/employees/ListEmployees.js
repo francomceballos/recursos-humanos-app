@@ -48,14 +48,15 @@ export default function ListEmployees() {
             <h3>Human Resources System</h3>
         </div>
 
-        <table className="table table-striped table-hover align-middle">
+        <table className="table table-striped table-hover table-success align-middle caption-top" style={{ borderRadius: '10px', overflow: 'hidden' }}>
+        <caption>List of employees</caption>
         <thead className='table-dark'>
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Area</th>
                 <th scope="col">Salary</th>
-                <th></th>
+                <th scope='col'>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -65,12 +66,17 @@ export default function ListEmployees() {
                 <th scope="row">{employee.idEmployee}</th>
                     <td>{employee.name}</td>
                     <td>{employee.area}</td>
-                    <td><NumericFormat value={employee.salary}
+                    <td>
+                        <NumericFormat 
+                        value={employee.salary}
                         displayType={'text'}
-                        thousandsSeparator=',' prefix={'$'}
-                        decimalScale={2} fixedDecimalScale/>
+                        thousandsSeparator=','
+                        prefix={'$ '}
+                        decimalScale={3} 
+                        fixedDecimalScale
+                        />
                     </td>
-                    <td className='text-center'>
+                    <td className=''>
                         <div>
                         <Link className='btn btn-primary btn-sm me-3' to={`/edit/${employee.idEmployee}`}>Edit</Link>
                         <button onClick={()=> deleteEmployee(employee.idEmployee)} className='btn btn-danger btn-sm'> Delete</button>
